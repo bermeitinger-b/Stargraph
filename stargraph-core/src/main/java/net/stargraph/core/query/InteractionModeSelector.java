@@ -34,11 +34,11 @@ import java.util.Objects;
 
 import static net.stargraph.query.InteractionMode.NLI;
 
-public final class InterationModeSelector {
+public final class InteractionModeSelector {
     private Config config;
     private Language language;
 
-    public InterationModeSelector(Config config, Language language) {
+    public InteractionModeSelector(Config config, Language language) {
         this.config = Objects.requireNonNull(config);
         this.language = Objects.requireNonNull(language);
     }

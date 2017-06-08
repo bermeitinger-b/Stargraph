@@ -30,8 +30,26 @@ public enum Language {
 
     EN("EN", "english"),
     DE("DE", "german"),
-    PT("PT", "portuguese")
-
+    PT("PT", "portuguese"),
+    FR("FR", "french"),
+    ES("ES", "spanish"),
+    IT("IT", "italian"),
+    PL("PL", "polish"),
+    UK("UK", "ukrainian"),
+    RO("RO", "romanian"),
+    SK("SK", "slovakian"),
+    NL("NL", "dutch"),
+    FI("FI", "finnish"),
+    SV("SV", "swedish"),
+    HU("HU", "hungarian"),
+    CA("CA", "catalan"),
+    NB("NB", "norwegian"),
+    LT("LT", "lithuanian"),
+    ET("ET", "estonian"),
+    IS("IS", "icelandic"),
+    SL("SL", "slovenian"),
+    GL("GL", "galician"),
+    DA("DA", "danish"),
     ;
 
     String code;

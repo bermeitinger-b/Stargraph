@@ -29,7 +29,9 @@ package net.stargraph.core.query;
 import net.stargraph.StarGraphException;
 import net.stargraph.core.Namespace;
 import net.stargraph.core.Stargraph;
+import net.stargraph.core.Translator;
 import net.stargraph.core.graph.GraphSearcher;
+import net.stargraph.core.impl.geofluent.GeofluentTranslator;
 import net.stargraph.core.query.nli.*;
 import net.stargraph.core.query.response.AnswerSetResponse;
 import net.stargraph.core.query.response.NoResponse;
@@ -59,9 +61,10 @@ public final class QueryEngine {
     private Stargraph core;
     private Analyzers analyzers;
     private GraphSearcher graphSearcher;
-    private InterationModeSelector modeSelector;
+    private InteractionModeSelector modeSelector;
     private Namespace namespace;
     private Language language;
+    private Translator translator;
 
     public QueryEngine(String dbId, Stargraph core) {
         this.dbId = Objects.requireNonNull(dbId);
@@ -70,10 +73,15 @@ public final class QueryEngine {
         this.graphSearcher = core.createGraphSearcher(dbId);
         this.namespace = core.getNamespace(dbId);
         this.language = core.getLanguage(dbId);
-        this.modeSelector = new InterationModeSelector(core.getConfig(), language);
+        this.modeSelector = new InteractionModeSelector(core.getConfig(), language);
+        this.translator = new GeofluentTranslator(core.getConfig(), language);
     }
 
     public QueryResponse query(String query) {
+        return query(query, this.language);
+    }
+
+    public QueryResponse query(String query, Language queryLanguage) {
         final InteractionMode mode = modeSelector.detect(query);
         QueryResponse response = new NoResponse(mode, query);
 
@@ -81,7 +89,10 @@ public final class QueryEngine {
         try {
             switch (mode) {
                 case NLI:
-                    response = nliQuery(query, language);
+                    if (queryLanguage != this.language) {
+                        query = this.translator.translate(query, queryLanguage, this.language);
+                    }
+                    response = nliQuery(query, this.language);
                     break;
                 case SPARQL:
                     response = sparqlQuery(query);

@@ -33,6 +33,7 @@ import net.stargraph.core.query.response.AnswerSetResponse;
 import net.stargraph.core.query.response.NoResponse;
 import net.stargraph.core.query.response.SPARQLSelectResponse;
 import net.stargraph.model.LabeledEntity;
+import net.stargraph.query.Language;
 import net.stargraph.rest.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,11 +57,17 @@ public final class QueryResourceImpl implements QueryResource {
     }
 
     @Override
-    public Response query(String id, String q) {
+    public Response query(String id, String q, Language lang) {
         try {
             if (core.hasKB(id)) {
                 QueryEngine engine = engines.computeIfAbsent(id, (k) -> new QueryEngine(k, core));
-                QueryResponse queryResponse = engine.query(q);
+                QueryResponse queryResponse;
+                if (lang == null) {
+                    queryResponse = engine.query(q);
+                } else {
+                    queryResponse = engine.query(q, lang);
+                }
+
                 return Response.status(Response.Status.OK).entity(buildUserResponse(queryResponse)).build();
             }
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -71,7 +78,7 @@ public final class QueryResourceImpl implements QueryResource {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
-    public UserResponse buildUserResponse(QueryResponse queryResponse) {
+    private UserResponse buildUserResponse(QueryResponse queryResponse) {
 
         if (queryResponse instanceof NoResponse) {
             return new NoUserResponse(queryResponse.getUserQuery(), queryResponse.getInteractionMode());
@@ -101,9 +108,9 @@ public final class QueryResourceImpl implements QueryResource {
         else if (queryResponse instanceof SPARQLSelectResponse) {
             SPARQLSelectResponse selectResponse = (SPARQLSelectResponse)queryResponse;
             final Map<String, List<String>> bindings = new LinkedHashMap<>();
-            selectResponse.getBindings().entrySet().forEach(e -> {
-                List<String> entityEntryList = e.getValue().stream().map(LabeledEntity::getId).collect(Collectors.toList());
-                bindings.put(e.getKey(), entityEntryList);
+            selectResponse.getBindings().forEach((key, value) -> {
+                List<String> entityEntryList = value.stream().map(LabeledEntity::getId).collect(Collectors.toList());
+                bindings.put(key, entityEntryList);
             });
 
             SPARQLSelectUserResponse response =

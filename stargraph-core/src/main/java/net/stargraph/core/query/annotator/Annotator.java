@@ -51,7 +51,7 @@ public abstract class Annotator {
             throw e;
         }
         catch (Exception e) {
-            logger.error(marker, "Erro caught during annotation of '{}' ({})", sentence, language);
+            logger.error(marker, "Error caught during annotation of '{}' ({})", sentence, language);
             throw new StarGraphException(e);
         }
     }

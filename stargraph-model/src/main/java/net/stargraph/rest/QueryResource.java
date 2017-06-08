@@ -26,6 +26,8 @@ package net.stargraph.rest;
  * ==========================License-End===============================
  */
 
+import net.stargraph.query.Language;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -39,5 +41,5 @@ public interface QueryResource {
 
     @GET
     @Path("{kbId}/query")
-    Response query(@PathParam("kbId") String id, @QueryParam("q") String q);
+    Response query(@PathParam("kbId") String id, @QueryParam("q") String q, @QueryParam("lang") Language lang);
 }
