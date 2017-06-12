@@ -29,9 +29,8 @@ package net.stargraph.core.query;
 import net.stargraph.StarGraphException;
 import net.stargraph.core.Namespace;
 import net.stargraph.core.Stargraph;
-import net.stargraph.core.Translator;
+import net.stargraph.core.translation.Translator;
 import net.stargraph.core.graph.GraphSearcher;
-import net.stargraph.core.impl.geofluent.GeofluentTranslator;
 import net.stargraph.core.query.nli.*;
 import net.stargraph.core.query.response.AnswerSetResponse;
 import net.stargraph.core.query.response.NoResponse;
@@ -74,7 +73,7 @@ public final class QueryEngine {
         this.namespace = core.getNamespace(dbId);
         this.language = core.getLanguage(dbId);
         this.modeSelector = new InteractionModeSelector(core.getConfig(), language);
-        this.translator = new GeofluentTranslator(core.getConfig(), language);
+        this.translator = TranslationFeature.create(core.getConfig());
     }
 
     public QueryResponse query(String query) {
@@ -103,14 +102,12 @@ public final class QueryEngine {
 
             return response;
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error(marker, "Query Error '{}'", query, e);
             throw new StarGraphException("Query Error", e);
-        }
-        finally {
+        } finally {
             long millis = System.currentTimeMillis() - startTime;
-            logger.info(marker, "Query Engine took {}s Response: {}",  millis / 1000.0, response);
+            logger.info(marker, "Query Engine took {}s Response: {}", millis / 1000.0, response);
         }
     }
 
@@ -161,9 +158,8 @@ public final class QueryEngine {
             InstanceEntity pivot = resolvePivot(triple.s, builder);
             pivot = pivot != null ? pivot : resolvePivot(triple.o, builder);
             resolvePredicate(pivot, triple.p, builder);
-        }
-        else {
-            // Problably is: V T C
+        } else {
+            // Probably is: V T C
             DataModelBinding binding = triple.s.getModelType() == DataModelType.VARIABLE ? triple.o : triple.s;
             resolveClass(binding, builder);
         }
@@ -194,7 +190,7 @@ public final class QueryEngine {
     private InstanceEntity resolvePivot(DataModelBinding binding, SPARQLQueryBuilder builder) {
         List<Score> mappings = builder.getMappings(binding);
         if (!mappings.isEmpty()) {
-            return (InstanceEntity)mappings.get(0).getEntry();
+            return (InstanceEntity) mappings.get(0).getEntry();
         }
 
         if (binding.getModelType() == DataModelType.INSTANCE) {

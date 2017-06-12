@@ -49,8 +49,7 @@ public enum Language {
     IS("IS", "icelandic"),
     SL("SL", "slovenian"),
     GL("GL", "galician"),
-    DA("DA", "danish"),
-    ;
+    DA("DA", "danish");
 
     String code;
     String name;
