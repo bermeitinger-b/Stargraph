@@ -1,4 +1,4 @@
-package net.stargraph.core.serializer;
+package net.stargraph.core;
 
 /*-
  * ==========================License-Start=============================
@@ -26,28 +26,31 @@ package net.stargraph.core.serializer;
  * ==========================License-End===============================
  */
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import net.stargraph.model.*;
+import net.stargraph.data.DataProvider;
+import net.stargraph.data.Indexable;
+import net.stargraph.model.Document;
+import net.stargraph.model.KBId;
 
 /**
- * The standard Serializer
+ * Encapsulates the logic to provide a stream of documents.
  */
-public final class ObjectSerializer {
+public final class DocumentProviderFactory extends BaseDataProviderFactory {
 
-    public static ObjectMapper createMapper(KBId kbId) {
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(Fact.class, new FactSerializer(kbId));
-        module.addDeserializer(Fact.class, new FactDeSerializer(kbId));
-        module.addSerializer(PropertyEntity.class, new PropertySerializer(kbId));
-        module.addDeserializer(PropertyEntity.class, new PropertyDeserializer(kbId));
-        module.addSerializer(InstanceEntity.class, new InstanceSerializer(kbId));
-        module.addDeserializer(InstanceEntity.class, new InstanceDeserializer(kbId));
-        module.addSerializer(ClassEntity.class, new ClassSerializer(kbId));
-        module.addSerializer(Document.class, new DocumentSerializer(kbId));
-        module.addDeserializer(Document.class, new DocumentDeserializer(kbId));
-        mapper.registerModule(module);
-        return mapper;
+    public DocumentProviderFactory(Stargraph core) {
+        super(core);
     }
+
+    public static void clearDocuments(KBId kbId) {
+        DocumentIterator.clearDocuments(kbId);
+    }
+
+    public static void storeDocument(KBId kbId, Document document) {
+        DocumentIterator.storeDocument(kbId, document);
+    }
+
+    @Override
+    public DataProvider<Indexable> create(KBId kbId) {
+        return new DataProvider<>(new DocumentIterator(kbId));
+    }
+
 }
