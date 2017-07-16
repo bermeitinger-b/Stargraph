@@ -36,7 +36,6 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -66,7 +65,7 @@ public final class Server {
             Config config = core.getConfig();
             String urlStr = config.getString("networking.rest-url");
             ResourceConfig rc = new ResourceConfig();
-            rc.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
+            rc.register(CORSFilters.class);
             rc.register(LoggingFilter.class);
             rc.register(JacksonFeature.class);
             rc.register(MultiPartFeature.class);

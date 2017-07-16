@@ -33,7 +33,6 @@ import net.stargraph.core.Stargraph;
 import net.stargraph.core.index.Indexer;
 import net.stargraph.model.Document;
 import net.stargraph.model.KBId;
-import net.stargraph.query.Language;
 import net.stargraph.rest.KBResource;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -49,6 +48,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -82,15 +83,17 @@ final class KBResourceImpl implements KBResource {
                 .distinct()
                 .collect(Collectors.toList());
 
-        logger.trace(marker, "Getting languages for KBs: {}", kbIDs);
-
-        Map<String, Language> languageMap = kbIDs
-                .parallelStream()
-                .collect(Collectors.toMap(kbId -> kbId, kbId -> core.getLanguage(kbId)));
+        final List<Map<String, String>> outputMaps = new ArrayList<>();
+        kbIDs.forEach(kbId -> {
+            Map<String, String> outputMap = new HashMap<>();
+            outputMap.put("id", kbId);
+            outputMap.put("language", core.getLanguage(kbId).toString());
+            outputMaps.add(outputMap);
+        });
 
         return Response
                 .status(Response.Status.OK)
-                .entity(languageMap)
+                .entity(outputMaps)
                 .build();
     }
 
@@ -125,7 +128,7 @@ final class KBResourceImpl implements KBResource {
         // get file information
         FormDataBodyPart filePart = form.getField("file");
         InputStream fileInputStream = filePart.getValueAs(InputStream.class);
-        ContentDisposition contentDisposition =  filePart.getContentDisposition();
+        ContentDisposition contentDisposition = filePart.getContentDisposition();
         String fileName = contentDisposition.getFileName();
         MediaType mediaType = filePart.getMediaType();
 
