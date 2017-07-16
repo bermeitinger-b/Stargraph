@@ -20,10 +20,10 @@ public class GeofluentTranslatorFactory extends TranslatorFactory {
 
     @Override
     public Translator create() {
-        return (new GeofluentTranslatorBuilder()
+        return new GeofluentTranslatorBuilder()
                 .withKey(key)
                 .withSecret(secret)
-                .build());
+                .build();
     }
 
 }

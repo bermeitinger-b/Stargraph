@@ -15,7 +15,7 @@ ADD http://opennlp.sourceforge.net/models-1.5/en-pos-maxent.bin opennlp/
 ADD http://opennlp.sourceforge.net/models-1.5/pt-pos-maxent.bin opennlp/
 
 
-ADD stargraph-server-${project.version}-dist.tar.gz .
+ADD "stargraph-server-${project.version}-dist.tar.gz" .
 
 WORKDIR /usr/share/stargraph/bin
 
