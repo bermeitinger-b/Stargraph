@@ -1,4 +1,4 @@
-package net.stargraph.data.processor;
+package net.stargraph.data;
 
 /*-
  * ==========================License-Start=============================
@@ -12,10 +12,10 @@ package net.stargraph.data.processor;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,43 +26,10 @@ package net.stargraph.data.processor;
  * ==========================License-End===============================
  */
 
-import com.typesafe.config.Config;
-import net.stargraph.StarGraphException;
+import net.stargraph.data.processor.Holder;
+import net.stargraph.model.KBId;
 
-import java.io.Serializable;
-import java.util.Objects;
+public interface DataQueueFactory {
 
-public abstract class BaseProcessor implements Processor<Serializable> {
-    private Config config;
-
-    public BaseProcessor(Config config) {
-        this.config = Objects.requireNonNull(config);
-        if (!config.hasPath(getName())) {
-            throw new StarGraphException("Configuration name mismatch.");
-        }
-    }
-
-    public abstract void doRun(Holder<Serializable> holder) throws ProcessorException;
-
-    public abstract String getName();
-
-    public final Config getConfig() {
-        return config.getConfig(getName());
-    }
-
-    @Override
-    public String toString() {
-        return getName();
-    }
-
-    @Override
-    public final void run(Holder<Serializable> holder) throws ProcessorException {
-        try {
-            if (!holder.isSinkable()) {
-                doRun(holder);
-            }
-        } catch (Exception e) {
-            throw new ProcessorException("Processor '" + getName() + "' has failed.", e);
-        }
-    }
+	DataQueue<? extends Holder> create(KBId kbId);
 }

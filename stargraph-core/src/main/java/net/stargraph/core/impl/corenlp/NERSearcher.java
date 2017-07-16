@@ -1,7 +1,9 @@
-package net.stargraph.core.processors.ner;
+package net.stargraph.core.impl.corenlp;
 
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
+import net.stargraph.core.ner.LinkedNamedEntity;
+import net.stargraph.core.ner.NER;
 import net.stargraph.core.search.EntitySearcher;
 import net.stargraph.model.InstanceEntity;
 import net.stargraph.query.Language;
@@ -10,40 +12,32 @@ import net.stargraph.rank.ParamsBuilder;
 import net.stargraph.rank.Scores;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class NERSearcher {
+public final class NERSearcher implements NER {
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Marker marker = MarkerFactory.getMarker("ner");
     private CoreNLPNERClassifier ner;
     private EntitySearcher entitySearcher;
     private String entitySearcherDbId;
     private boolean reverseNameOrder;
 
-    public NERSearcher(Language language) {
-        this(language, null, null);
-    }
-
-    // constructor for allowing database-lookup
     public NERSearcher(Language language, EntitySearcher entitySearcher, String entitySearcherDbId) {
-        if (language == null) {
-            throw new IllegalArgumentException("'language' can't be null");
-        }
-        if (entitySearcher != null && entitySearcherDbId == null) {
-            throw new IllegalArgumentException("'entitySearcherDbId' can't be null for given entitySearcher");
-        }
-        this.ner = new CoreNLPNERClassifier(language);
-        this.entitySearcher = entitySearcher;
-        this.entitySearcherDbId = entitySearcherDbId;
-//        this.reverseNameOrder = core.getConfiguration().dataSetName.toLowerCase().startsWith("gnd"); //hack for GND
-        this.reverseNameOrder = false; //TODO activate for some dbIDs?
+        this.ner = new CoreNLPNERClassifier(Objects.requireNonNull(language));
+        this.entitySearcher = Objects.requireNonNull(entitySearcher);
+        this.entitySearcherDbId = Objects.requireNonNull(entitySearcherDbId);
+        this.reverseNameOrder = false; //TODO: read from configuration, specific for each KB.
     }
 
+    @Override
     public List<LinkedNamedEntity> searchAndLink(String text) {
-        logger.info("NER Search and Linking: '{}'", text);
+        logger.debug(marker, "NER Search and Linking: '{}'", text);
         final List<List<CoreLabel>> sentences = ner.classify(text);
-        logger.debug("NER output: {}", sentences);
+        logger.debug(marker, "NER output: {}", sentences);
         return postProcessFoundNamedEntities(sentences);
     }
 
@@ -57,7 +51,7 @@ public class NERSearcher {
         }
 
         if (sentenceList.isEmpty() || (sentenceList.size() == 1 && sentenceList.get(0).isEmpty())) {
-            logger.info("No NEs left to be linked.");
+            logger.debug(marker, "No NEs left to be linked.");
             return Collections.emptyList();
         }
 
@@ -127,7 +121,7 @@ public class NERSearcher {
     private List<LinkedNamedEntity> linkNamedEntities(List<List<LinkedNamedEntity>> sentenceList) {
         List<LinkedNamedEntity> allNamedEntities = new ArrayList<>();
 
-        logger.info("Trying to link {} NE(s).", sentenceList.get(0).size()); //TODO: corenlp: Always a list with 1 list?
+        logger.debug(marker, "Trying to link {} NE(s).", sentenceList.get(0).size()); //TODO: corenlp: Always a list with 1 list?
 
         for (List<LinkedNamedEntity> p : sentenceList) {
             for (LinkedNamedEntity namedEntity : p) {
@@ -153,14 +147,14 @@ public class NERSearcher {
             }
         }
 
-        logger.info("Linked {} entities.", allNamedEntities.size());
+        logger.info(marker, "Linked {} entities.", allNamedEntities.size());
 
         return allNamedEntities;
     }
 
     private void tryLink(LinkedNamedEntity namedEntity) {
         if (entitySearcher == null) {
-            logger.warn("entitySearcher not specified, therefore database lookup is not possible!");
+            logger.warn(marker, "entitySearcher not specified, therefore database lookup is not possible!");
             return;
         }
 

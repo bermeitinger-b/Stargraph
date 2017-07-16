@@ -1,4 +1,4 @@
-package net.stargraph.data.processor;
+package net.stargraph.data;
 
 /*-
  * ==========================License-Start=============================
@@ -12,10 +12,10 @@ package net.stargraph.data.processor;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,43 +26,27 @@ package net.stargraph.data.processor;
  * ==========================License-End===============================
  */
 
-import com.typesafe.config.Config;
-import net.stargraph.StarGraphException;
+import net.stargraph.data.processor.Holder;
 
-import java.io.Serializable;
-import java.util.Objects;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public abstract class BaseProcessor implements Processor<Serializable> {
-    private Config config;
+public class DataQueue<T extends Holder> {
+	private Queue<T> queue;
 
-    public BaseProcessor(Config config) {
-        this.config = Objects.requireNonNull(config);
-        if (!config.hasPath(getName())) {
-            throw new StarGraphException("Configuration name mismatch.");
-        }
-    }
+	public DataQueue() {
+		this.queue = new LinkedList<T>();
+	}
 
-    public abstract void doRun(Holder<Serializable> holder) throws ProcessorException;
+	public boolean isEmpty() {
+		return queue.isEmpty();
+	}
 
-    public abstract String getName();
+	public boolean offer(T t) {
+		return queue.offer(t);
+	}
 
-    public final Config getConfig() {
-        return config.getConfig(getName());
-    }
-
-    @Override
-    public String toString() {
-        return getName();
-    }
-
-    @Override
-    public final void run(Holder<Serializable> holder) throws ProcessorException {
-        try {
-            if (!holder.isSinkable()) {
-                doRun(holder);
-            }
-        } catch (Exception e) {
-            throw new ProcessorException("Processor '" + getName() + "' has failed.", e);
-        }
-    }
+	public T poll() {
+		return queue.poll();
+	}
 }

@@ -1,8 +1,8 @@
-package net.stargraph.data.processor;
+package net.stargraph.core;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-model
+ * stargraph-core
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,43 +26,15 @@ package net.stargraph.data.processor;
  * ==========================License-End===============================
  */
 
-import com.typesafe.config.Config;
-import net.stargraph.StarGraphException;
+import net.stargraph.data.DataQueueFactory;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class BaseProcessor implements Processor<Serializable> {
-    private Config config;
+abstract class BaseDataQueueFactory implements DataQueueFactory {
 
-    public BaseProcessor(Config config) {
-        this.config = Objects.requireNonNull(config);
-        if (!config.hasPath(getName())) {
-            throw new StarGraphException("Configuration name mismatch.");
-        }
-    }
+    protected Stargraph core;
 
-    public abstract void doRun(Holder<Serializable> holder) throws ProcessorException;
-
-    public abstract String getName();
-
-    public final Config getConfig() {
-        return config.getConfig(getName());
-    }
-
-    @Override
-    public String toString() {
-        return getName();
-    }
-
-    @Override
-    public final void run(Holder<Serializable> holder) throws ProcessorException {
-        try {
-            if (!holder.isSinkable()) {
-                doRun(holder);
-            }
-        } catch (Exception e) {
-            throw new ProcessorException("Processor '" + getName() + "' has failed.", e);
-        }
+    public BaseDataQueueFactory(Stargraph core) {
+        this.core = Objects.requireNonNull(core);
     }
 }
