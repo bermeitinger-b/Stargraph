@@ -43,6 +43,10 @@ public interface KBResource {
     @GET
     List<String> getKBs();
 
+    @GET
+    @Path("detailed")
+    Response getDetailedKBs();
+
     @POST
     @Path("{id}/_load/{type}")
     Response load(@PathParam("id") String id, @PathParam("type") String type,

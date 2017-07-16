@@ -16,6 +16,14 @@ public class TranslatableTuple {
         this.target = Objects.requireNonNull(target);
     }
 
+    public Language getFrom() {
+        return from;
+    }
+
+    public Language getTarget() {
+        return target;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

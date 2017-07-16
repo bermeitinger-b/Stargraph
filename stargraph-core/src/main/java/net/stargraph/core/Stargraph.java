@@ -37,9 +37,11 @@ import net.stargraph.core.impl.jena.JenaGraphSearcher;
 import net.stargraph.core.index.Indexer;
 import net.stargraph.core.index.IndexerFactory;
 import net.stargraph.core.processors.Processors;
+import net.stargraph.core.query.TranslationFeature;
 import net.stargraph.core.search.BaseSearcher;
 import net.stargraph.core.search.EntitySearcher;
 import net.stargraph.core.search.Searcher;
+import net.stargraph.core.translation.Translator;
 import net.stargraph.data.DataProvider;
 import net.stargraph.data.DataProviderFactory;
 import net.stargraph.data.processor.Holder;
@@ -75,6 +77,7 @@ public final class Stargraph {
     private IndexerFactory indexerFactory;
     private GraphModelFactory modelFactory;
     private boolean initialized;
+    private final Translator translator;
 
     public Stargraph() {
         this(ConfigFactory.load().getConfig("stargraph"), true);
@@ -91,6 +94,7 @@ public final class Stargraph {
         this.searchers = new ConcurrentHashMap<>();
         this.namespaces = new ConcurrentHashMap<>();
         this.kbLoaders = new ConcurrentHashMap<>();
+        this.translator = TranslationFeature.create(cfg);
 
         setIndexerFactory(createIndexerFactory());
         setModelFactory(new HDTModelFactory(this));
@@ -185,6 +189,10 @@ public final class Stargraph {
 
     public void setModelFactory(GraphModelFactory modelFactory) {
         this.modelFactory = Objects.requireNonNull(modelFactory);
+    }
+
+    public Translator getTranslator() {
+        return translator;
     }
 
     public ProcessorChain createProcessorChain(KBId kbId) {

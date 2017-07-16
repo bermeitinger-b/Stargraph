@@ -78,6 +78,26 @@ public final class QueryResourceImpl implements QueryResource {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
+    @Override
+    public Response possibleTargetLanguages(Language sourceLanguage) {
+        List<Language> possibleTargetLanguages = core.getTranslator().getPossibleTargetLanguages(sourceLanguage);
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(possibleTargetLanguages)
+                .build();
+    }
+
+    @Override
+    public Response possibleSourceLanguages(Language targetLanguage) {
+        List<Language> possibleSourceLanguages = core.getTranslator().getPossibleSourceLanguages(targetLanguage);
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(possibleSourceLanguages)
+                .build();
+    }
+
     private UserResponse buildUserResponse(QueryResponse queryResponse) {
 
         if (queryResponse instanceof NoResponse) {

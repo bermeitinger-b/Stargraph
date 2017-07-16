@@ -28,31 +28,29 @@ package net.stargraph.server;
 
 import com.google.common.base.Preconditions;
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.ConfigValue;
-import net.stargraph.StarGraphException;
 import net.stargraph.core.DocumentProviderFactory;
 import net.stargraph.core.Stargraph;
 import net.stargraph.core.index.Indexer;
 import net.stargraph.model.Document;
 import net.stargraph.model.KBId;
+import net.stargraph.query.Language;
 import net.stargraph.rest.KBResource;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.glassfish.jersey.media.multipart.*;
+import org.glassfish.jersey.media.multipart.ContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 final class KBResourceImpl implements KBResource {
@@ -73,6 +71,27 @@ final class KBResourceImpl implements KBResource {
                 .map(kbId -> String.format("%s/%s", kbId.getId(), kbId.getType()))
                 .sorted(String::compareTo)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Response getDetailedKBs() {
+        List<String> kbIDs = core
+                .getKBs()
+                .parallelStream()
+                .map(KBId::getId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        logger.trace(marker, "Getting languages for KBs: {}", kbIDs);
+
+        Map<String, Language> languageMap = kbIDs
+                .parallelStream()
+                .collect(Collectors.toMap(kbId -> kbId, kbId -> core.getLanguage(kbId)));
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(languageMap)
+                .build();
     }
 
     @Override

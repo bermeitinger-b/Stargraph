@@ -29,7 +29,6 @@ package net.stargraph.core.query;
 import net.stargraph.StarGraphException;
 import net.stargraph.core.Namespace;
 import net.stargraph.core.Stargraph;
-import net.stargraph.core.translation.Translator;
 import net.stargraph.core.graph.GraphSearcher;
 import net.stargraph.core.query.nli.*;
 import net.stargraph.core.query.response.AnswerSetResponse;
@@ -63,7 +62,6 @@ public final class QueryEngine {
     private InteractionModeSelector modeSelector;
     private Namespace namespace;
     private Language language;
-    private Translator translator;
 
     public QueryEngine(String dbId, Stargraph core) {
         this.dbId = Objects.requireNonNull(dbId);
@@ -73,7 +71,6 @@ public final class QueryEngine {
         this.namespace = core.getNamespace(dbId);
         this.language = core.getLanguage(dbId);
         this.modeSelector = new InteractionModeSelector(core.getConfig(), language);
-        this.translator = TranslationFeature.create(core.getConfig());
     }
 
     public QueryResponse query(String query) {
@@ -89,7 +86,7 @@ public final class QueryEngine {
             switch (mode) {
                 case NLI:
                     if (queryLanguage != this.language) {
-                        query = this.translator.translate(query, queryLanguage, this.language);
+                        query = this.core.getTranslator().translate(query, queryLanguage, this.language);
                     }
                     response = nliQuery(query, this.language);
                     break;

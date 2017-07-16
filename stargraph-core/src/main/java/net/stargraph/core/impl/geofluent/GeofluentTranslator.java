@@ -1,17 +1,18 @@
 package net.stargraph.core.impl.geofluent;
 
-import com.typesafe.config.Config;
 import io.redlink.ssix.geofluent.GeoFluentClient;
 import net.stargraph.StarGraphException;
 import net.stargraph.UnsupportedLanguageException;
-import net.stargraph.core.translation.Translator;
 import net.stargraph.core.translation.TranslatableTuple;
+import net.stargraph.core.translation.Translator;
 import net.stargraph.query.Language;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -84,5 +85,29 @@ public class GeofluentTranslator extends Translator {
         }
 
         return translated;
+    }
+
+    @Override
+    protected List<Language> doGetPossibleTargetLanguages(Language sourceLanguage) {
+        return possibleTranslations
+                .keySet()
+                .parallelStream()
+                .filter(f -> f.getFrom().equals(sourceLanguage))
+                .map(TranslatableTuple::getTarget)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    protected List<Language> doGetPossibleSourceLanguages(Language targetLanguage) {
+        return possibleTranslations
+                .keySet()
+                .parallelStream()
+                .filter(f -> f.getTarget().equals(targetLanguage))
+                .map(TranslatableTuple::getFrom)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
     }
 }
