@@ -98,6 +98,18 @@ public final class QueryResourceImpl implements QueryResource {
                 .build();
     }
 
+    @Override
+    public Response examples(String kbId) {
+        List<String> exampleQueries = Collections.singletonList(
+                "Who is the wife of Barack Obama?"
+        );
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(exampleQueries)
+                .build();
+    }
+
     private UserResponse buildUserResponse(QueryResponse queryResponse) {
 
         if (queryResponse instanceof NoResponse) {

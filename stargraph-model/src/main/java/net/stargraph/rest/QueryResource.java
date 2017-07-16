@@ -43,6 +43,9 @@ public interface QueryResource {
     @Path("{kbId}/query")
     Response query(@PathParam("kbId") String id, @QueryParam("q") String q, @QueryParam("lang") Language lang);
 
+    @GET
+    @Path("examples")
+    Response examples(@QueryParam("kbId") String kbId);
 
     @GET
     @Path("translation/possibleTargets")
