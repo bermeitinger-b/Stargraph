@@ -1,4 +1,4 @@
-package net.stargraph.core.index;
+package net.stargraph.test;
 
 /*-
  * ==========================License-Start=============================
@@ -12,10 +12,10 @@ package net.stargraph.core.index;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,32 +26,31 @@ package net.stargraph.core.index;
  * ==========================License-End===============================
  */
 
-import net.stargraph.data.Indexable;
+import net.stargraph.core.Stargraph;
+import net.stargraph.core.query.QueryEngine;
+import net.stargraph.core.query.response.AnswerSetResponse;
+import net.stargraph.model.InstanceEntity;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
-/**
- * Definition of an indexer.
- */
-public interface Indexer {
+public class EntitySimilarityQueryTest {
 
-    void start();
+    private static String dbId = "dbpedia-2016";
+    private QueryEngine queryEngine;
 
-    void stop();
+    @BeforeClass
+    public void beforeClass() {
+        queryEngine = new QueryEngine(dbId, new Stargraph());
+    }
 
-    void load();
+    @Test(enabled = false)
+    public void simpleEntityQuery() {
 
-    void load(boolean reset, int limit);
+        AnswerSetResponse response = (AnswerSetResponse) queryEngine.query("Entities similar to Barack Obama");
+        Assert.assertTrue(response.getEntityAnswer().contains(new InstanceEntity("http://dbpedia.org/resource/Joe_Biden", "Joe Biden")));
 
-    void awaitLoader() throws InterruptedException, TimeoutException, ExecutionException;
+    }
 
-    void awaitLoader(long time, TimeUnit unit) throws InterruptedException, TimeoutException, ExecutionException;
-
-    void index(Indexable data) throws InterruptedException;
-
-    void flush();
-
-    void deleteAll();
 }

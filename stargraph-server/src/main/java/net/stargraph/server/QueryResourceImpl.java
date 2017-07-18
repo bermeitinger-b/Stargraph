@@ -120,7 +120,7 @@ public final class QueryResourceImpl implements QueryResource {
             SchemaAgnosticUserResponse response =
                     new SchemaAgnosticUserResponse(answerSet.getUserQuery(), answerSet.getInteractionMode(), answerSet.getSparqlQuery());
 
-            List<UserResponse.EntityEntry> answers = answerSet.getShortAnswer().stream()
+            List<UserResponse.EntityEntry> answers = answerSet.getEntityAnswer().stream()
                     .map(a -> new UserResponse.EntityEntry(a.getId(), a.getValue())).collect(Collectors.toList());
 
             response.setAnswers(answers);

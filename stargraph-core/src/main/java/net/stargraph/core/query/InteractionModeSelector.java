@@ -27,6 +27,7 @@ package net.stargraph.core.query;
  */
 
 import com.typesafe.config.Config;
+import net.stargraph.core.query.nli.ClueAnalyzer;
 import net.stargraph.query.InteractionMode;
 import net.stargraph.query.Language;
 
@@ -58,11 +59,55 @@ public final class InteractionModeSelector {
             } else if (queryString.contains(":")) {
                 mode = InteractionMode.SA_SIMPLE_SPARQL;
             }
+
+            if (isEntitySimilarityQuery(queryString)) {
+                mode = InteractionMode.ENTITY_SIMILARITY;
+            }
+
+            if (isDefinitionQuery(queryString)) {
+                mode = InteractionMode.DEFINITION;
+            }
+
+            if (isClueQuery(queryString)) {
+                mode = InteractionMode.CLUE;
+            }
         }
 
         //TODO: other types will require configurable rules per language.
 
         return mode;
+    }
+
+    private boolean isEntitySimilarityQuery(String queryString){
+        if (queryString == null || queryString.isEmpty()) {
+            return false;
+        }
+
+        final String q = queryString.trim().toLowerCase();
+        return q.contains("similar to") || q.contains("is like"); //TODO: What if this on the middle of the query?
+    }
+
+    private boolean isDefinitionQuery(String queryString){
+
+        queryString = queryString.replace("Who is", "").replace("Who are", "").
+                replace("What is", "").replace("What are", "").trim();
+
+        queryString = queryString.replaceAll("\\.", "").replaceAll("\\?", "").replaceAll("\\!", "");
+        for(String word : queryString.split(" ")) {
+            if (!Character.isUpperCase(word.charAt(0)))
+                return false;
+        }
+
+        if(queryString.contains("like"))
+            return false;
+
+        return true;
+    }
+
+    private boolean isClueQuery(String queryString){
+
+        ClueAnalyzer clueAnalyzer = new ClueAnalyzer();
+        return clueAnalyzer.isClue(queryString);
     }
 
 }

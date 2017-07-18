@@ -1,4 +1,4 @@
-package net.stargraph.core.index;
+package net.stargraph.test;
 
 /*-
  * ==========================License-Start=============================
@@ -12,10 +12,10 @@ package net.stargraph.core.index;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,32 +26,49 @@ package net.stargraph.core.index;
  * ==========================License-End===============================
  */
 
-import net.stargraph.data.Indexable;
+import net.stargraph.core.query.QueryEngine;
+import net.stargraph.core.query.nli.ClueAnalyzer;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
-/**
- * Definition of an indexer.
- */
-public interface Indexer {
+public class ClueAnalyzerTest {
 
-    void start();
+    private static String dbId = "passage-wiki-2017";
+    private QueryEngine queryEngine;
 
-    void stop();
 
-    void load();
+    @Test(enabled = true)
+    public void pronominalLATDetection() {
 
-    void load(boolean reset, int limit);
+        String clue = "The worse speller of a famous duo in November 1805 he wrote in his journal Ocian in view.";
 
-    void awaitLoader() throws InterruptedException, TimeoutException, ExecutionException;
+        ClueAnalyzer clueAnalyzer = new ClueAnalyzer();
+        String lat = clueAnalyzer.getAnswerType(clue);
 
-    void awaitLoader(long time, TimeUnit unit) throws InterruptedException, TimeoutException, ExecutionException;
+        Assert.assertEquals(lat, "PERSON");
+    }
 
-    void index(Indexable data) throws InterruptedException;
+    @Test(enabled = true)
+    public void openLATDetection1() {
 
-    void flush();
+        String clue = "This European city is famous for its waffles.";
 
-    void deleteAll();
+        ClueAnalyzer clueAnalyzer = new ClueAnalyzer();
+        String lat = clueAnalyzer.getAnswerType(clue);
+        Assert.assertEquals(lat, "European city");
+    }
+
+    @BeforeClass
+    public void beforeClass() throws Exception {
+
+    }
+
+    @AfterClass
+    public void afterClass() {
+
+    }
+
 }

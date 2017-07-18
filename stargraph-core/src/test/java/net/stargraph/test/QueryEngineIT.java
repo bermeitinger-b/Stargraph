@@ -56,7 +56,7 @@ public class QueryEngineIT {
     @Test
     public void whoIsTheWifeOfBarackObamaTest() {
         AnswerSetResponse response = (AnswerSetResponse) queryEngine.query("Who is the wife of Barack Obama?");
-        Assert.assertTrue(response.getShortAnswer().contains(new InstanceEntity("http://dbpedia.org/resource/Michelle_Obama", "Michelle Obama")));
+        Assert.assertTrue(response.getEntityAnswer().contains(new InstanceEntity("http://dbpedia.org/resource/Michelle_Obama", "Michelle Obama")));
     }
 
     @Test
