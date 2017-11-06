@@ -1,4 +1,4 @@
-package net.stargraph.test;
+package net.stargraph.test.it;
 
 /*-
  * ==========================License-Start=============================
@@ -26,14 +26,16 @@ package net.stargraph.test;
  * ==========================License-End===============================
  */
 
+import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import net.stargraph.StarGraphException;
+import net.stargraph.core.KBCore;
 import net.stargraph.core.Stargraph;
 import net.stargraph.core.index.Indexer;
 import net.stargraph.core.search.EntitySearcher;
 import net.stargraph.model.*;
 import net.stargraph.rank.*;
-import org.junit.Assert;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -48,13 +50,7 @@ import static net.stargraph.test.TestUtils.createPath;
  */
 public final class ElasticIndexerIT {
 
-    static {
-        System.setProperty("stargraph.kb.dbpedia-2016.enabled", "no");
-        System.setProperty("stargraph.kb.mytest.enabled", "no");
-        System.setProperty("stargraph.kb.simple.enabled", "no");
-    }
-
-    private Stargraph stargraph;
+    private KBCore core;
     private KBId factsId = KBId.of("obama", "facts");
     private KBId propsId = KBId.of("obama", "relations");
     private KBId entitiesId = KBId.of("obama", "entities");
@@ -64,19 +60,21 @@ public final class ElasticIndexerIT {
         Path root = Files.createTempFile("stargraph-", "-dataDir");
         Path hdtPath = createPath(root, factsId).resolve("triples.hdt");
         copyResource("dataSets/obama/facts/triples.hdt", hdtPath);
-        System.setProperty("stargraph.data.root-dir", root.toString());
         ConfigFactory.invalidateCaches();
-        stargraph = new Stargraph();
-
+        Config config = ConfigFactory.load().getConfig("stargraph");
+        Stargraph stargraph = new Stargraph(config, false);
+        stargraph.setDataRootDir(root.toFile());
+        stargraph.initialize();
+        core = stargraph.getKBCore("obama");
         //TODO: replace with KBLoader#loadAll()
-        loadProperties(stargraph);
-        loadEntities(stargraph);
-        loadFacts(stargraph);
+        loadProperties();
+        loadEntities();
+        loadFacts();
     }
 
     @Test
     public void classSearchTest() {
-        EntitySearcher searcher = stargraph.createEntitySearcher();
+        EntitySearcher searcher = core.createEntitySearcher();
         ModifiableSearchParams searchParams = ModifiableSearchParams.create("obama").term("president");
         ModifiableRankParams rankParams = ParamsBuilder.levenshtein();
         Scores scores = searcher.classSearch(searchParams, rankParams);
@@ -86,7 +84,7 @@ public final class ElasticIndexerIT {
 
     @Test
     public void instanceSearchTest() {
-        EntitySearcher searcher = stargraph.createEntitySearcher();
+        EntitySearcher searcher = core.createEntitySearcher();
 
         ModifiableSearchParams searchParams = ModifiableSearchParams.create("obama").term("baraCk Obuma");
         ModifiableRankParams rankParams = ParamsBuilder.levenshtein(); // threshold defaults to auto
@@ -99,7 +97,7 @@ public final class ElasticIndexerIT {
 
     @Test
     public void propertySearchTest() {
-        EntitySearcher searcher = stargraph.createEntitySearcher();
+        EntitySearcher searcher = core.createEntitySearcher();
 
         ModifiableSearchParams searchParams = ModifiableSearchParams.create("obama").term("position");
         ModifiableRankParams rankParams = ParamsBuilder.word2vec().threshold(Threshold.auto());
@@ -111,7 +109,7 @@ public final class ElasticIndexerIT {
 
     @Test
     public void pivotedSearchTest() {
-        EntitySearcher searcher = stargraph.createEntitySearcher();
+        EntitySearcher searcher = core.createEntitySearcher();
 
         ModifiableSearchParams searchParams = ModifiableSearchParams.create("obama").term("school");
         ModifiableRankParams rankParams = ParamsBuilder.word2vec().threshold(Threshold.auto());
@@ -125,43 +123,37 @@ public final class ElasticIndexerIT {
 
     @Test
     public void getEntitiesTest() {
-        EntitySearcher searcher = stargraph.createEntitySearcher();
+        EntitySearcher searcher = core.createEntitySearcher();
         LabeledEntity obama = searcher.getEntity("obama", "dbr:Barack_Obama");
         Assert.assertEquals(new InstanceEntity("dbr:Barack_Obama", "Barack Obama"), obama);
     }
 
     @Test
     public void getIndexerTest() throws Exception {
-        Assert.assertNotNull(stargraph.getIndexer(factsId));
-        Assert.assertNotNull(stargraph.getIndexer(entitiesId));
-        Assert.assertNotNull(stargraph.getIndexer(propsId));
-    }
-
-    @Test(expectedExceptions = StarGraphException.class)
-    public void getMissingIndexerTest() throws Exception {
-        // Minimal test when multiple datasets/types are being loaded.
-        Assert.assertNotNull(stargraph.getIndexer(KBId.of("mytest", "mytype")));
+        Assert.assertNotNull(core.getIndexer(factsId.getModel()));
+        Assert.assertNotNull(core.getIndexer(entitiesId.getModel()));
+        Assert.assertNotNull(core.getIndexer(propsId.getModel()));
     }
 
     @Test(expectedExceptions = StarGraphException.class)
     public void getUnknownIndexerTest() {
-        stargraph.getIndexer(KBId.of("unknown", "type"));
+        core.getIndexer("unknown");
     }
 
-    private void loadFacts(Stargraph stargraph) throws Exception {
-        Indexer indexer = stargraph.getIndexer(factsId);
+    private void loadFacts() throws Exception {
+        Indexer indexer = core.getIndexer(factsId.getModel());
         indexer.load(true, -1);
         indexer.awaitLoader();
     }
 
-    private void loadProperties(Stargraph stargraph) throws Exception {
-        Indexer indexer = stargraph.getIndexer(propsId);
+    private void loadProperties() throws Exception {
+        Indexer indexer = core.getIndexer(propsId.getModel());
         indexer.load(true, -1);
         indexer.awaitLoader();
     }
 
-    private void loadEntities(Stargraph stargraph) throws Exception {
-        Indexer indexer = stargraph.getIndexer(entitiesId);
+    private void loadEntities() throws Exception {
+        Indexer indexer = core.getIndexer(entitiesId.getModel());
         indexer.load(true, -1);
         indexer.awaitLoader();
     }

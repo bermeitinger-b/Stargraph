@@ -1,5 +1,31 @@
 package net.stargraph.core.ner;
 
+/*-
+ * ==========================License-Start=============================
+ * stargraph-core
+ * --------------------------------------------------------------------
+ * Copyright (C) 2017 Lambda^3
+ * --------------------------------------------------------------------
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * ==========================License-End===============================
+ */
+
 import net.stargraph.model.LabeledEntity;
 
 import java.util.Arrays;
@@ -9,7 +35,7 @@ import java.util.Objects;
 public final class LinkedNamedEntity {
 
     private LabeledEntity entity;
-    private Double score;
+    private double score;
     private int start;
     private int end;
     private String cat;
@@ -33,7 +59,7 @@ public final class LinkedNamedEntity {
         return cat;
     }
 
-    public Double getScore() {
+    public double getScore() {
         return score;
     }
 
@@ -49,33 +75,6 @@ public final class LinkedNamedEntity {
         return entity;
     }
 
-    @Override
-    public String toString() {
-        return "SNE{" +
-                "value='" + value + '\'' +
-                ", cat='" + cat + '\'' +
-                ", start='" + start + '\'' +
-                ", end='" + end + '\'' +
-                ", score='" + score + '\'' +
-                '}';
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LinkedNamedEntity that = (LinkedNamedEntity) o;
-        return start == that.start &&
-                end == that.end &&
-                Objects.equals(cat, that.cat) &&
-                Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(start, end, cat, value);
-    }
 
     public void reverseValue() {
         if (cat.equalsIgnoreCase("I-PER")) { // TODO: make 'I-PER' constant, align with all classifiers
@@ -93,10 +92,41 @@ public final class LinkedNamedEntity {
     }
 
     public void link(LabeledEntity entity, double score) {
-        if (entity == null) {
-            throw new IllegalArgumentException("Can't link a null entity");
-        }
-        this.entity = entity;
+        this.entity = Objects.requireNonNull(entity);
         this.score = score;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LinkedNamedEntity that = (LinkedNamedEntity) o;
+        return start == that.start &&
+                end == that.end &&
+                Objects.equals(entity, that.entity) &&
+                Objects.equals(score, that.score) &&
+                Objects.equals(cat, that.cat) &&
+                Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(entity, score, start, end, cat, value);
+    }
+
+    @Override
+    public String toString() {
+        if (entity == null) {
+            return "Unlinked{" +
+                    "value='" + value + '\'' +
+                    ", cat='" + cat + '\'' +
+                    '}';
+        }
+        return "Linked{" +
+                "entity='" + entity + '\'' +
+                ", value='" + value + '\'' +
+                ", cat='" + cat + '\'' +
+                ", score='" + score + '\'' +
+                '}';
     }
 }

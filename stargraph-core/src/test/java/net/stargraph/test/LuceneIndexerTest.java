@@ -1,4 +1,4 @@
-package net.stargraph.core.index;
+package net.stargraph.test;
 
 /*-
  * ==========================License-Start=============================
@@ -26,13 +26,42 @@ package net.stargraph.core.index;
  * ==========================License-End===============================
  */
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import net.stargraph.core.Stargraph;
+import net.stargraph.core.index.Indexer;
+import net.stargraph.core.search.Searcher;
 import net.stargraph.model.KBId;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-public final class NullIndexerFactory implements IndexerFactory {
+import java.io.File;
 
-    @Override
-    public BaseIndexer create(KBId kbId, Stargraph core) {
-        return new NullIndexer(kbId, core);
+public final class LuceneIndexerTest {
+
+    private KBId kbId = KBId.of("obama", "entities"); // Entities uses Lucene. See reference.conf.
+    private Stargraph stargraph;
+
+
+    @BeforeClass
+    public void beforeClass() {
+        ConfigFactory.invalidateCaches();
+        Config config = ConfigFactory.load().getConfig("stargraph");
+        File dataRootDir = TestUtils.prepareObamaTestEnv().toFile();
+        this.stargraph = new Stargraph(config, false);
+        stargraph.setKBInitSet(kbId.getId());
+        stargraph.setDataRootDir(dataRootDir);
+        this.stargraph.initialize();
+    }
+
+
+    @Test
+    public void bulkLoadTest() throws Exception {
+        Indexer indexer = stargraph.getIndexer(kbId);
+        indexer.load(true, -1);
+        indexer.awaitLoader();
+        Searcher searcher = stargraph.getSearcher(kbId);
+        Assert.assertEquals(searcher.countDocuments(), 756);
     }
 }

@@ -1,8 +1,8 @@
-package net.stargraph.core.index;
+package net.stargraph.test.rank;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * stargraph-model
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,14 +26,31 @@ package net.stargraph.core.index;
  * ==========================License-End===============================
  */
 
-import net.stargraph.core.Stargraph;
-import net.stargraph.core.impl.elastic.ElasticIndexer;
-import net.stargraph.model.KBId;
+import net.stargraph.rank.Rankable;
+import net.stargraph.rank.Score;
 
-public final class DefaultIndexerFactory implements IndexerFactory {
+public final class RankTestUtils {
 
-    @Override
-    public BaseIndexer create(KBId kbId, Stargraph core) {
-        return new ElasticIndexer(kbId, core);
+    static Rankable createRankable(String v) {
+        return new Rankable() {
+            @Override
+            public String toString() {
+                return v;
+            }
+
+            @Override
+            public String getValue() {
+                return v;
+            }
+
+            @Override
+            public String getId() {
+                return v;
+            }
+        };
+    }
+
+    static Score createScore(String v, double d) {
+        return new Score(createRankable(v), d);
     }
 }

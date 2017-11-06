@@ -1,8 +1,8 @@
-package net.stargraph.core;
+package net.stargraph.test.rank;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * stargraph-model
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -12,10 +12,10 @@ package net.stargraph.core;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,19 +26,27 @@ package net.stargraph.core;
  * ==========================License-End===============================
  */
 
-import net.stargraph.data.DataQueue;
-import net.stargraph.data.processor.Holder;
-import net.stargraph.model.KBId;
+import net.stargraph.rank.Scores;
+import net.stargraph.rank.impl.LevenshteinRanker;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-public class DocumentQueueFactory extends BaseDataQueueFactory {
+import java.util.Arrays;
 
+import static net.stargraph.test.rank.RankTestUtils.createRankable;
+import static net.stargraph.test.rank.RankTestUtils.createScore;
 
-	public DocumentQueueFactory(Stargraph core) {
-		super(core);
-	}
+public final class RankerTest {
 
-	@Override
-	public DataQueue<? extends Holder> create(KBId kbId) {
-		return new DataQueue<>();
-	}
+    @Test
+    public void levenshteinTest() {
+        LevenshteinRanker ranker = new LevenshteinRanker();
+        Scores scores = new Scores(Arrays.asList(createScore("lambda3", 100),
+                createScore("Lambda^30", 94), createScore("Lambda^300", 51), createScore("lambda^3", 1)));
+
+        Scores rescored = ranker.score(scores, createRankable("lambda^3"));
+
+        Assert.assertEquals(rescored.get(0).getRankableView().getValue(), "lambda^3");
+        Assert.assertEquals(rescored.get(0).getValue(), 1.0);
+    }
 }

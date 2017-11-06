@@ -1,8 +1,8 @@
-package net.stargraph.data;
+package net.stargraph.core;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-model
+ * stargraph-core
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -12,10 +12,10 @@ package net.stargraph.data;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,27 +26,13 @@ package net.stargraph.data;
  * ==========================License-End===============================
  */
 
-import net.stargraph.data.processor.Holder;
+import net.stargraph.core.index.BaseIndexer;
+import net.stargraph.core.search.BaseSearcher;
+import net.stargraph.model.KBId;
 
-import java.util.LinkedList;
-import java.util.Queue;
+public interface IndicesFactory {
 
-public class DataQueue<T extends Holder> {
-	private Queue<T> queue;
+    BaseIndexer createIndexer(KBId kbId, Stargraph stargraph);
 
-	public DataQueue() {
-		this.queue = new LinkedList<T>();
-	}
-
-	public boolean isEmpty() {
-		return queue.isEmpty();
-	}
-
-	public boolean offer(T t) {
-		return queue.offer(t);
-	}
-
-	public T poll() {
-		return queue.poll();
-	}
+    BaseSearcher createSearcher(KBId kbId, Stargraph stargraph);
 }

@@ -1,5 +1,31 @@
 package net.stargraph.core.impl.corenlp;
 
+/*-
+ * ==========================License-Start=============================
+ * stargraph-core
+ * --------------------------------------------------------------------
+ * Copyright (C) 2017 Lambda^3
+ * --------------------------------------------------------------------
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * ==========================License-End===============================
+ */
+
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import net.stargraph.core.ner.LinkedNamedEntity;
@@ -35,10 +61,19 @@ public final class NERSearcher implements NER {
 
     @Override
     public List<LinkedNamedEntity> searchAndLink(String text) {
-        logger.debug(marker, "NER Search and Linking: '{}'", text);
-        final List<List<CoreLabel>> sentences = ner.classify(text);
-        logger.debug(marker, "NER output: {}", sentences);
-        return postProcessFoundNamedEntities(sentences);
+        logger.debug(marker, "'{}'", text);
+        List<LinkedNamedEntity> linked = null;
+        long start = System.nanoTime();
+        try {
+            final List<List<CoreLabel>> sentences = ner.classify(text); //TODO: Improve decoupling, still tied to CoreNLP
+            logger.trace(marker, "NER output: {}", sentences);
+            linked = postProcessFoundNamedEntities(sentences);
+            return linked;
+        }
+        finally {
+            double elapsedInMillis = (System.nanoTime() - start) / 1000_000;
+            logger.debug(marker, "Took {}ms, entities: {}, text: '{}'", elapsedInMillis, linked, text);
+        }
     }
 
     private List<LinkedNamedEntity> postProcessFoundNamedEntities(List<List<CoreLabel>> sentences) {
@@ -46,12 +81,12 @@ public final class NERSearcher implements NER {
 
         if (this.reverseNameOrder) {
             sentenceList.forEach(sentence -> {
-                sentence.stream().forEach(LinkedNamedEntity::reverseValue);
+                sentence.forEach(LinkedNamedEntity::reverseValue);
             });
         }
 
         if (sentenceList.isEmpty() || (sentenceList.size() == 1 && sentenceList.get(0).isEmpty())) {
-            logger.debug(marker, "No NEs left to be linked.");
+            logger.trace(marker, "No Entities detected.");
             return Collections.emptyList();
         }
 
@@ -115,13 +150,11 @@ public final class NERSearcher implements NER {
                     .collect(Collectors.toList()));
         }
 
-        return sentenceList;
+        return sentenceList.stream().filter(s -> s.size() > 0).collect(Collectors.toList());
     }
 
     private List<LinkedNamedEntity> linkNamedEntities(List<List<LinkedNamedEntity>> sentenceList) {
         List<LinkedNamedEntity> allNamedEntities = new ArrayList<>();
-
-        logger.debug(marker, "Trying to link {} NE(s).", sentenceList.get(0).size()); //TODO: corenlp: Always a list with 1 list?
 
         for (List<LinkedNamedEntity> p : sentenceList) {
             for (LinkedNamedEntity namedEntity : p) {
@@ -147,24 +180,27 @@ public final class NERSearcher implements NER {
             }
         }
 
-        logger.info(marker, "Linked {} entities.", allNamedEntities.size());
+        logger.trace(marker, "Linked {} entities.", allNamedEntities.size());
 
         return allNamedEntities;
     }
 
     private void tryLink(LinkedNamedEntity namedEntity) {
-        if (entitySearcher == null) {
-            logger.warn(marker, "entitySearcher not specified, therefore database lookup is not possible!");
-            return;
-        }
+        if (!namedEntity.getCat().equalsIgnoreCase("DATE")) {
+            //TODO: Limit reduce network latency but can hurt precision in some cases
+            ModifiableSearchParams searchParams =
+                    ModifiableSearchParams.create(this.entitySearcherDbId).term(namedEntity.getValue()).limit(50);
 
-        final Scores scores = entitySearcher.instanceSearch(ModifiableSearchParams.create(this.entitySearcherDbId).term(namedEntity.getValue()), ParamsBuilder.levenshtein());
+            logger.info(marker, "Trying to link {}", namedEntity);
 
-        // Currently, we only care about the highest scored entity.
-        if (scores.size() > 0) {
-            InstanceEntity instance = (InstanceEntity) scores.get(0).getEntry();
-            double score = scores.get(0).getValue();
-            namedEntity.link(instance, score);
+            final Scores scores = entitySearcher.instanceSearch(searchParams, ParamsBuilder.levenshtein());
+
+            // Currently, we only care about the highest scored entity.
+            if (scores.size() > 0) {
+                InstanceEntity instance = (InstanceEntity) scores.get(0).getEntry();
+                double score = scores.get(0).getValue();
+                namedEntity.link(instance, score);
+            }
         }
     }
 
@@ -172,7 +208,7 @@ public final class NERSearcher implements NER {
         LinkedNamedEntity found = null;
         for (LinkedNamedEntity sne : namedEntities) {
             if (sne.getValue().contains(namedEntity)) {
-                // use the first occurence of a substring
+                // use the first occurrence of a substring
                 found = sne;
                 break;
             }

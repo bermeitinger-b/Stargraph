@@ -42,6 +42,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Can be placed in the workflow to create passages.
@@ -49,17 +50,17 @@ import java.util.Objects;
 public final class PassageProcessor extends BaseProcessor {
     public static String name = "passage-processor";
 
-    private Stargraph core;
+    private Stargraph stargraph;
 
-    public PassageProcessor(Stargraph core, Config config) {
+    public PassageProcessor(Stargraph stargraph, Config config) {
         super(config);
-        this.core = Objects.requireNonNull(core);
+        this.stargraph = Objects.requireNonNull(stargraph);
     }
 
     @Override
     public void doRun(Holder<Serializable> holder) throws ProcessorException {
         Serializable entry = holder.get();
-        NER ner = core.getNER(holder.getKBId().getId());
+        NER ner = stargraph.getKBCore(holder.getKBId().getId()).getNER();
 
         if (entry instanceof Document) {
             Document document = (Document)entry;
@@ -67,15 +68,22 @@ public final class PassageProcessor extends BaseProcessor {
             List<Passage> passages = new ArrayList<>();
             for (String sentence : SentencesUtils.splitIntoSentences(document.getText())) {
                 List<LinkedNamedEntity> lners = ner.searchAndLink(sentence);
-                List<LabeledEntity> entities = new ArrayList<>();
 
                 // only add linked entities
-                lners.stream().filter(l -> l.getEntity() != null).forEach(l -> entities.add(l.getEntity()));
+                List<LabeledEntity> entities = lners.parallelStream()
+                        .filter(e -> e.getEntity() != null)
+                        .map(LinkedNamedEntity::getEntity).collect(Collectors.toList());
 
                 passages.add(new Passage(sentence, entities));
             }
 
-            holder.set(new Document(document.getTitle(), document.getText(), passages));
+            holder.set(new Document(
+                    document.getId(),
+                    document.getTitle(),
+                    document.getSummary(),
+                    document.getText(),
+                    passages
+            ));
         }
     }
 

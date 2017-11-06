@@ -1,8 +1,8 @@
-package net.stargraph.core;
+package net.stargraph.data.processor;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * stargraph-model
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,15 +26,11 @@ package net.stargraph.core;
  * ==========================License-End===============================
  */
 
-import net.stargraph.data.DataQueueFactory;
-
-import java.util.Objects;
-
-abstract class BaseDataQueueFactory implements DataQueueFactory {
-
-    protected Stargraph core;
-
-    public BaseDataQueueFactory(Stargraph core) {
-        this.core = Objects.requireNonNull(core);
+/**
+ * Flags an unrecoverable exception.
+ */
+public final class FatalProcessorException extends ProcessorException {
+    public FatalProcessorException(Throwable cause) {
+        super("Processor threw an unrecoverable error :/", cause);
     }
 }
