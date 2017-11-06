@@ -43,13 +43,10 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 final class KBResourceImpl implements KBResource {
@@ -65,28 +62,29 @@ final class KBResourceImpl implements KBResource {
     @Override
     public List<String> getKBs() {
         List<String> kbIdList = new ArrayList<>();
-        stargraph.getKBs().forEach(core -> kbIdList.addAll(core.getKBIds().stream()
-                .map(kbId -> String.format("%s/%s", kbId.getId(), kbId.getModel()))
-                .sorted(String::compareTo)
-                .collect(Collectors.toList())));
+        stargraph.getKBs().forEach(
+                core -> kbIdList.addAll(
+                        core
+                                .getKBIds()
+                                .stream()
+                                .map(kbId -> String.format("%s/%s", kbId.getId(), kbId.getModel()))
+                                .sorted(String::compareTo)
+                                .collect(Collectors.toList())
+                )
+        );
 
         return kbIdList;
     }
 
     @Override
     public Response getDetailedKBs() {
-        List<String> kbIDs = core
-                .getKBs()
-                .parallelStream()
-                .map(KBId::getId)
-                .distinct()
-                .collect(Collectors.toList());
+        List<String> kbIDs = this.getKBs();
 
         final List<Map<String, String>> outputMaps = new ArrayList<>();
         kbIDs.forEach(kbId -> {
             Map<String, String> outputMap = new HashMap<>();
             outputMap.put("id", kbId);
-            outputMap.put("language", core.getLanguage(kbId).toString());
+            outputMap.put("language", stargraph.getKBCore(kbId).getLanguage().toString());
             outputMaps.add(outputMap);
         });
 
@@ -133,8 +131,8 @@ final class KBResourceImpl implements KBResource {
         // index
         try {
             if (type.equals("documents")) {
-                String docId = fileName; //TODO get from other source?
-                String docTitle = FilenameUtils.removeExtension(fileName); //TODO get from other source?
+                String docId = fileName; // TODO get from other source?
+                String docTitle = FilenameUtils.removeExtension(fileName); // TODO get from other source?
                 indexer.index(new Indexable(new Document(docId, docTitle, null, content), kbId));
                 indexer.flush();
             } else {

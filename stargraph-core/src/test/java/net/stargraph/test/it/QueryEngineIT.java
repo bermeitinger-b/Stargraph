@@ -70,7 +70,7 @@ public class QueryEngineIT {
     @Test(dataProvider = "nlQueries", dataProviderClass = QueryEngineIT.class)
     public void test(String q, List<String> answers) {
         AnswerSetResponse response = (AnswerSetResponse) queryEngine.query(q);
-        List<String> answerIds = response.getShortAnswer().stream().map(LabeledEntity::getId).collect(Collectors.toList());
+        List<String> answerIds = response.getEntityAnswer().stream().map(LabeledEntity::getId).collect(Collectors.toList());
         if (answers.stream().noneMatch(answerIds::contains)) {
             Assert.fail("Test fail for query '" + q + "'. Accepted Answer Set: " + answers);
         }

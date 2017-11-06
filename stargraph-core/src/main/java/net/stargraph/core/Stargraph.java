@@ -34,8 +34,6 @@ import net.stargraph.core.impl.hdt.HDTModelFactory;
 import net.stargraph.core.index.Indexer;
 import net.stargraph.core.processors.Processors;
 import net.stargraph.core.query.TranslationFeature;
-import net.stargraph.core.search.BaseSearcher;
-import net.stargraph.core.search.EntitySearcher;
 import net.stargraph.core.search.Searcher;
 import net.stargraph.core.translation.Translator;
 import net.stargraph.data.DataProvider;
@@ -96,6 +94,8 @@ public final class Stargraph {
         setDataRootDir(mainConfig.getString("data.root-dir")); // absolute path is expected
         setDefaultIndicesFactory(createDefaultIndicesFactory());
         setGraphModelFactory(new HDTModelFactory(this));
+
+        this.translator = TranslationFeature.create(cfg);
 
         if (initKBs) {
             initialize();
