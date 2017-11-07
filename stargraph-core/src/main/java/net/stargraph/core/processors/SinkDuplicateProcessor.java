@@ -2,7 +2,7 @@ package net.stargraph.core.processors;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.processors;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;

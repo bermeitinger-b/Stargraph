@@ -2,7 +2,7 @@ package net.stargraph.core.query.nli;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.query.nli;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -127,11 +128,9 @@ public class ClueAnalyzer {
 
 	public boolean entityIsInClue(String entity, String clueText){
 
-		if(clueText.contains(entity))
-			return true;
+        return clueText.contains(entity);
 
-		return false;
-	}
+    }
 
 	private void parse(String clueText){
 

@@ -1,4 +1,4 @@
-package net.stargraph.core.translation;
+package net.stargraph.core.impl;
 
         /*-
          * ==========================License-Start=============================
@@ -27,6 +27,30 @@ package net.stargraph.core.translation;
          */
 
 
-public abstract class TranslatorBuilder {
+import net.stargraph.core.translation.Translator;
+import net.stargraph.query.Language;
 
+import java.util.ArrayList;
+import java.util.List;
+
+public class DummyTranslator extends Translator {
+
+    DummyTranslator() {
+        logger.debug(marker, "DummyTranslator initialized");
+    }
+
+    @Override
+    protected String doTranslate(String text, Language from, Language target) {
+        return text;
+    }
+
+    @Override
+    protected List<Language> doGetPossibleTargetLanguages(Language sourceLanguage) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected List<Language> doGetPossibleSourceLanguages(Language targetLanguage) {
+        return new ArrayList<>();
+    }
 }

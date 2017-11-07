@@ -2,7 +2,7 @@ package net.stargraph.core;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import com.google.common.collect.Iterators;
 import net.stargraph.data.Indexable;

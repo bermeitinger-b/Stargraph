@@ -2,7 +2,7 @@ package net.stargraph.core.query.nli;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,12 +26,13 @@ package net.stargraph.core.query.nli;
  * ==========================License-End===============================
  */
 
-import net.stargraph.query.Language;
+
 import net.stargraph.StarGraphException;
 import net.stargraph.UnmappedQueryTypeException;
 import net.stargraph.core.query.QueryType;
 import net.stargraph.core.query.Rules;
 import net.stargraph.core.query.annotator.Annotator;
+import net.stargraph.query.Language;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -83,7 +84,8 @@ public final class QuestionAnalyzer {
         return queryTypePatterns.stream()
                 .filter(p -> p.match(question))
                 .map(QueryTypePatterns::getQueryType)
-                .findFirst().orElseThrow(() -> new UnmappedQueryTypeException(question));
+                .findFirst()
+                .orElseThrow(() -> new UnmappedQueryTypeException(question));
     }
 
     private String getTimingReport(String q, long start) {

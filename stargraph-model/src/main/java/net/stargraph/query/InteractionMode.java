@@ -2,7 +2,7 @@ package net.stargraph.query;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-model
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.query;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 public enum InteractionMode {
     NLI,

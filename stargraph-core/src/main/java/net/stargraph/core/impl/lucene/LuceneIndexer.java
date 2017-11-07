@@ -2,7 +2,7 @@ package net.stargraph.core.impl.lucene;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.impl.lucene;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import net.stargraph.StarGraphException;
 import net.stargraph.core.Stargraph;
@@ -61,7 +62,7 @@ public final class LuceneIndexer extends BaseIndexer {
     }
 
     @Override
-    protected void doIndex(Serializable data, KBId kbId) throws InterruptedException {
+    protected void doIndex(Serializable data, KBId kbId) {
         try {
             writer.addDocument(createDocument(data));
         } catch (IOException e) {
@@ -79,7 +80,7 @@ public final class LuceneIndexer extends BaseIndexer {
     }
 
     @Override
-    protected void afterLoad() throws InterruptedException {
+    protected void afterLoad() {
         try {
             writer.commit();
             writer.flush();

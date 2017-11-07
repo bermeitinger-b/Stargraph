@@ -2,7 +2,7 @@ package net.stargraph.core.query.annotator;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.query.annotator;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import java.util.Objects;
 

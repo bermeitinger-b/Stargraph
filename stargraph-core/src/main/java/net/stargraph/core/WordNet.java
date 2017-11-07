@@ -2,7 +2,7 @@ package net.stargraph.core;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,6 +26,7 @@ package net.stargraph.core;
  * ==========================License-End===============================
  */
 
+
 import edu.smu.tspell.wordnet.*;
 import net.stargraph.model.wordnet.PosType;
 import net.stargraph.model.wordnet.WNTuple;
@@ -38,7 +39,7 @@ import java.util.*;
 
 /**
  * Simple Wrapper to read Word Net database.
- * <p>
+ *
  * Depends on the installation of the WordNet Database.
  * Some unix distros distributes binary packages, like Ubuntu (packages: wordnet, wordnet-sense-index).
  */

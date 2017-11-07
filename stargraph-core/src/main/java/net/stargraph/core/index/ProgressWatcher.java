@@ -2,7 +2,7 @@ package net.stargraph.core.index;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.index;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import net.stargraph.model.KBId;
 import org.slf4j.Logger;
@@ -84,7 +85,7 @@ public final class ProgressWatcher {
         return elapsedTime;
     }
 
-    public synchronized void stop() throws InterruptedException {
+    public synchronized void stop() {
         if (executor != null && !executor.isShutdown()) {
             stopTime = System.nanoTime() / 1000_000;
             elapsedTime = stopTime - startTime;

@@ -2,7 +2,7 @@ package net.stargraph.core.impl.jena;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.impl.jena;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import net.stargraph.ModelUtils;
 import net.stargraph.core.KBCore;

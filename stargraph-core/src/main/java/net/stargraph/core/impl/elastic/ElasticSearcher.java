@@ -2,7 +2,7 @@ package net.stargraph.core.impl.elastic;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.impl.elastic;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.stargraph.core.Stargraph;

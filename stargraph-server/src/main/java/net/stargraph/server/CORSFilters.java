@@ -26,12 +26,12 @@ package net.stargraph.server;
  * ==========================License-End===============================
  */
 
+
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
 
 /**
  * TODO: This is only to ease development of the frontends.
@@ -42,7 +42,7 @@ public final class CORSFilters implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext,
-                       ContainerResponseContext responseContext) throws IOException {
+                       ContainerResponseContext responseContext) {
 
         MultivaluedMap<String, Object> headers = responseContext.getHeaders();
         headers.add("Access-Control-Allow-Origin", "*");

@@ -2,7 +2,7 @@ package net.stargraph.core.query.nli;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.query.nli;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import net.stargraph.StarGraphException;
 import net.stargraph.core.query.QueryType;

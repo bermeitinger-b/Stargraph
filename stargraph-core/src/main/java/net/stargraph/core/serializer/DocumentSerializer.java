@@ -2,7 +2,7 @@ package net.stargraph.core.serializer;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,10 +26,10 @@ package net.stargraph.core.serializer;
  * ==========================License-End===============================
  */
 
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import net.stargraph.model.Document;
-import net.stargraph.model.Fact;
 import net.stargraph.model.KBId;
 
 import java.io.IOException;

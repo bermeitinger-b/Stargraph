@@ -2,7 +2,7 @@ package net.stargraph.core.impl.opennlp;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,12 +26,13 @@ package net.stargraph.core.impl.opennlp;
  * ==========================License-End===============================
  */
 
+
 import com.typesafe.config.Config;
-import net.stargraph.query.Language;
 import net.stargraph.StarGraphException;
 import net.stargraph.core.query.annotator.Annotator;
 import net.stargraph.core.query.annotator.PartOfSpeechSet;
 import net.stargraph.core.query.annotator.Word;
+import net.stargraph.query.Language;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.tokenize.Tokenizer;

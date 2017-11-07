@@ -2,7 +2,7 @@ package net.stargraph.core.search;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.search;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import net.stargraph.rank.Scores;
 

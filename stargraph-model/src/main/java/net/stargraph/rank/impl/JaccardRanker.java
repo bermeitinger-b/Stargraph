@@ -2,7 +2,7 @@ package net.stargraph.rank.impl;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-model
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.rank.impl;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import org.apache.commons.text.beta.similarity.JaccardDistance;
 

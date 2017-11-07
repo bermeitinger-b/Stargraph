@@ -2,7 +2,7 @@ package net.stargraph;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-model
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 public final class UnmappedQueryTypeException extends StarGraphException {
     public UnmappedQueryTypeException(String query) {

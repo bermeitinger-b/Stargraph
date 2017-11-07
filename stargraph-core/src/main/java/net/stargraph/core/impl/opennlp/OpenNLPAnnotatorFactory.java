@@ -2,7 +2,7 @@ package net.stargraph.core.impl.opennlp;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.impl.opennlp;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import com.typesafe.config.Config;
 import net.stargraph.core.query.annotator.Annotator;

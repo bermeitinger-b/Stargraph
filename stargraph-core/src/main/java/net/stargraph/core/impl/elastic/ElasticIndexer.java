@@ -2,7 +2,7 @@ package net.stargraph.core.impl.elastic;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.impl.elastic;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import net.stargraph.StarGraphException;
@@ -145,7 +146,7 @@ public final class ElasticIndexer extends BaseIndexer {
 
 
     @Override
-    protected void doIndex(Serializable data, KBId kbId) throws InterruptedException {
+    protected void doIndex(Serializable data, KBId kbId) {
         if (bulkProcessor == null) {
             throw new StarGraphException("Back-end is unreachable now.");
         }

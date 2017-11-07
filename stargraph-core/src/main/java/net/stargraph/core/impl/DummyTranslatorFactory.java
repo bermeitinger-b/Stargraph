@@ -1,4 +1,4 @@
-package net.stargraph.core.translation;
+package net.stargraph.core.impl;
 
         /*-
          * ==========================License-Start=============================
@@ -26,7 +26,19 @@ package net.stargraph.core.translation;
          * ==========================License-End===============================
          */
 
+import com.typesafe.config.Config;
+import net.stargraph.core.translation.Translator;
+import net.stargraph.core.translation.TranslatorFactory;
 
-public abstract class TranslatorBuilder {
+public class DummyTranslatorFactory extends TranslatorFactory {
+
+    public DummyTranslatorFactory(Config config) {
+        super(config);
+    }
+
+    @Override
+    public Translator create() {
+        return new DummyTranslator();
+    }
 
 }

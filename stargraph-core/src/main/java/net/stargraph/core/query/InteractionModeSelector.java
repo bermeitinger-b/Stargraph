@@ -2,7 +2,7 @@ package net.stargraph.core.query;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.query;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import com.typesafe.config.Config;
 import net.stargraph.core.query.nli.ClueAnalyzer;
@@ -98,10 +99,7 @@ public final class InteractionModeSelector {
                 return false;
         }
 
-        if(queryString.contains("like"))
-            return false;
-
-        return true;
+        return !queryString.contains("like");
     }
 
     private boolean isClueQuery(String queryString){

@@ -2,7 +2,7 @@ package net.stargraph.core.query;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.query;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 public class EntityQuery {
 

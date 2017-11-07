@@ -2,7 +2,7 @@ package net.stargraph.core.impl.lucene;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.impl.lucene;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import net.stargraph.StarGraphException;
 import net.stargraph.core.Stargraph;

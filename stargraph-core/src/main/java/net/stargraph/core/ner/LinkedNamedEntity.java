@@ -2,7 +2,7 @@ package net.stargraph.core.ner;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.ner;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import net.stargraph.model.LabeledEntity;
 

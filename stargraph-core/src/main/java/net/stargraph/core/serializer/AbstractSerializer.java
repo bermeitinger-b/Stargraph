@@ -2,7 +2,7 @@ package net.stargraph.core.serializer;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.serializer;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import net.stargraph.model.KBId;

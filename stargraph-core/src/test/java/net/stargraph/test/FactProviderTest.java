@@ -2,7 +2,7 @@ package net.stargraph.test;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,6 +26,7 @@ package net.stargraph.test;
  * ==========================License-End===============================
  */
 
+
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import net.stargraph.core.FactProviderFactory;
@@ -37,7 +38,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 public class FactProviderTest {
@@ -45,7 +45,7 @@ public class FactProviderTest {
     private Path root;
 
     @BeforeMethod
-    public void before() throws IOException {
+    public void before() {
         root = TestUtils.prepareObamaTestEnv();
         ConfigFactory.invalidateCaches();
         config = ConfigFactory.load().getConfig("stargraph");
@@ -63,7 +63,7 @@ public class FactProviderTest {
     }
 
     @Test
-    public void factFromNTriplesTest() throws IOException {
+    public void factFromNTriplesTest() {
         Stargraph core = new Stargraph(config, false);
         core.setDataRootDir(root.toFile());
         core.setGraphModelFactory(new NTriplesModelFactory(core));

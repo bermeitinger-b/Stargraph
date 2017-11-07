@@ -2,7 +2,7 @@ package net.stargraph.core;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import org.apache.jena.rdf.model.Model;
 import org.slf4j.Logger;

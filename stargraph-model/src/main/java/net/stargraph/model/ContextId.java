@@ -2,7 +2,7 @@ package net.stargraph.model;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-model
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.model;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import net.stargraph.data.processor.Hashable;
 

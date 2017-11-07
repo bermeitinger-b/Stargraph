@@ -2,7 +2,7 @@ package net.stargraph.test;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,13 +26,14 @@ package net.stargraph.test;
  * ==========================License-End===============================
  */
 
+
 import com.typesafe.config.ConfigFactory;
-import net.stargraph.query.Language;
 import net.stargraph.core.query.Analyzers;
-import net.stargraph.core.query.SPARQLQueryBuilder;
 import net.stargraph.core.query.QueryType;
+import net.stargraph.core.query.SPARQLQueryBuilder;
 import net.stargraph.core.query.nli.QuestionAnalysis;
 import net.stargraph.core.query.nli.QuestionAnalyzer;
+import net.stargraph.query.Language;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

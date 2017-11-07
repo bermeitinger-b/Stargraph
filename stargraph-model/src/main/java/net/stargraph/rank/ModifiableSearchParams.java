@@ -2,7 +2,7 @@ package net.stargraph.rank;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-model
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.rank;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import net.stargraph.model.BuiltInModel;
 import net.stargraph.model.KBId;

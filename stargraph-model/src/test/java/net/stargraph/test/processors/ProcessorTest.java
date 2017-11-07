@@ -2,7 +2,7 @@ package net.stargraph.test.processors;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-model
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.test.processors;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import net.stargraph.data.processor.ProcessorChain;
 import org.testng.Assert;

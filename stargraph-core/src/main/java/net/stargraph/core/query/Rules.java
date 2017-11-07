@@ -2,7 +2,7 @@ package net.stargraph.core.query;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,12 +26,16 @@ package net.stargraph.core.query;
  * ==========================License-End===============================
  */
 
+
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
 import com.typesafe.config.ConfigValue;
-import net.stargraph.query.Language;
 import net.stargraph.UnsupportedLanguageException;
-import net.stargraph.core.query.nli.*;
+import net.stargraph.core.query.nli.DataModelType;
+import net.stargraph.core.query.nli.DataModelTypePattern;
+import net.stargraph.core.query.nli.QueryPlanPatterns;
+import net.stargraph.core.query.nli.QueryTypePatterns;
+import net.stargraph.query.Language;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;

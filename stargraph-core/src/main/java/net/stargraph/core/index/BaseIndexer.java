@@ -2,7 +2,7 @@ package net.stargraph.core.index;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core.index;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.stargraph.StarGraphException;
@@ -99,7 +100,7 @@ public abstract class BaseIndexer implements Indexer {
     }
 
     @Override
-    public final void index(Indexable data) throws InterruptedException {
+    public final void index(Indexable data) {
         if (loading) {
             throw new IllegalStateException("Loader in progress. Incremental update is forbidden.");
         }
@@ -137,7 +138,7 @@ public abstract class BaseIndexer implements Indexer {
 
     @Override
     public final void awaitLoader(long time, TimeUnit unit)
-            throws InterruptedException, TimeoutException, ExecutionException {
+            throws InterruptedException, ExecutionException {
 
         if (!loading && loaderFutureTask == null) {
             throw new IllegalStateException("Loader was not called.");

@@ -2,7 +2,7 @@ package net.stargraph.core.index;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,6 +26,7 @@ package net.stargraph.core.index;
  * ==========================License-End===============================
  */
 
+
 import net.stargraph.core.Stargraph;
 import net.stargraph.model.KBId;
 
@@ -47,7 +48,7 @@ final class NullIndexer extends BaseIndexer {
     }
 
     @Override
-    protected void doIndex(Serializable data, KBId kbId) throws InterruptedException {
+    protected void doIndex(Serializable data, KBId kbId) {
         //that'it, nothing is done.
         System.out.println(data);
     }

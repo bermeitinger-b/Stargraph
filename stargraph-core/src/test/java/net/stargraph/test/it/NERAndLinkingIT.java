@@ -2,7 +2,7 @@ package net.stargraph.test.it;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,6 +26,7 @@ package net.stargraph.test.it;
  * ==========================License-End===============================
  */
 
+
 import com.typesafe.config.ConfigFactory;
 import net.stargraph.ModelUtils;
 import net.stargraph.core.Stargraph;
@@ -41,7 +42,7 @@ public final class NERAndLinkingIT {
     NER ner;
 
     @BeforeClass
-    public void beforeClass() throws Exception {
+    public void beforeClass() {
         ConfigFactory.invalidateCaches();
         Stargraph stargraph = new Stargraph();
         ner = stargraph.getKBCore("dbpedia-2016").getNER();

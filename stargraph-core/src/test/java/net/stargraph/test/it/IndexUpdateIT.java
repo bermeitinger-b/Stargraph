@@ -2,7 +2,7 @@ package net.stargraph.test.it;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,6 +26,7 @@ package net.stargraph.test.it;
  * ==========================License-End===============================
  */
 
+
 import com.typesafe.config.ConfigFactory;
 import net.stargraph.ModelUtils;
 import net.stargraph.core.Stargraph;
@@ -39,9 +40,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-
 /**
  * Aims to test the incremental indexing features.
  */
@@ -53,7 +51,7 @@ public final class IndexUpdateIT {
     private KBId kbId = KBId.of("simple", "facts");
 
     @BeforeClass
-    public void before() throws Exception {
+    public void before() {
         ConfigFactory.invalidateCaches();
         core = new Stargraph();
         searcher = new ElasticSearcher(kbId, core);
@@ -64,7 +62,7 @@ public final class IndexUpdateIT {
     }
 
     @Test
-    public void updateTest() throws InterruptedException, TimeoutException, ExecutionException {
+    public void updateTest() throws InterruptedException {
         Fact oneFact = ModelUtils.createFact(kbId, "dbr:Barack_Obama", "dbp:spouse", "dbr:Michelle_Obama");
         indexer.index(new Indexable(oneFact, kbId));
         indexer.flush();

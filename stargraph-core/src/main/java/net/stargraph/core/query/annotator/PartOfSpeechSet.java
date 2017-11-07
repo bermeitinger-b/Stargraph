@@ -2,7 +2,7 @@ package net.stargraph.core.query.annotator;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -26,9 +26,10 @@ package net.stargraph.core.query.annotator;
  * ==========================License-End===============================
  */
 
-import net.stargraph.query.Language;
+
 import net.stargraph.StarGraphException;
 import net.stargraph.UnsupportedLanguageException;
+import net.stargraph.query.Language;
 
 import java.util.HashSet;
 

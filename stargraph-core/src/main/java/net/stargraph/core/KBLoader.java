@@ -2,7 +2,7 @@ package net.stargraph.core;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.core;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import net.stargraph.StarGraphException;
 import net.stargraph.core.index.Indexer;
@@ -101,7 +102,7 @@ public final class KBLoader {
         });
     }
 
-    private void doLoadAll(String dbId) throws InterruptedException {
+    private void doLoadAll(String dbId) {
         logger.warn(marker, "Loading ALL DATA of '{}'. This can take some time ;) ..", dbId);
         List<KBId> successful = new ArrayList<>();
         List<KBId> failing = new ArrayList<>();

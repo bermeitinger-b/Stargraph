@@ -2,7 +2,7 @@ package net.stargraph.test.it;
 
 /*-
  * ==========================License-Start=============================
- * stargraph-core
+ * Stargraph
  * --------------------------------------------------------------------
  * Copyright (C) 2017 Lambda^3
  * --------------------------------------------------------------------
@@ -25,6 +25,7 @@ package net.stargraph.test.it;
  * THE SOFTWARE.
  * ==========================License-End===============================
  */
+
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
