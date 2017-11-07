@@ -40,8 +40,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Encapsulates all management within a specific configured KB.
@@ -91,14 +93,8 @@ public final class KBLoader {
 
         executor.submit(() -> {
             loading = true;
-            try {
-                doLoadAll(core.getKBName());
-            } catch (InterruptedException e) {
-                logger.error(marker, "Interrupted.", e);
-            }
-            finally {
-                loading = false;
-            }
+            doLoadAll(core.getKBName());
+            loading = false;
         });
     }
 
@@ -112,8 +108,11 @@ public final class KBLoader {
                 indexer.load(true, -1);
                 indexer.awaitLoader();
                 successful.add(kbId);
-            } catch (Exception e) {
+            } catch (TimeoutException | ExecutionException e) {
                 logger.error(marker, "Fail to load {}", kbId);
+                failing.add(kbId);
+            } catch (InterruptedException e) {
+                logger.error(marker, "Interrupted during loading {}", kbId);
                 failing.add(kbId);
             }
         });
