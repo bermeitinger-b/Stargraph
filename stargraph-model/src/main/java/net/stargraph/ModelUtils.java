@@ -161,7 +161,7 @@ public final class ModelUtils {
     }
 
     private static String getNamespace(String uriStr) {
-        if (uriStr.startsWith("http://")) {
+        if (uriStr.matches("^https?://.*")) {
             return SplitIRI.namespace(uriStr);
         }
         else {

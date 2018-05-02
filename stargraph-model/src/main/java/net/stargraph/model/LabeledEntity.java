@@ -29,10 +29,14 @@ package net.stargraph.model;
 
 import net.stargraph.data.processor.Hashable;
 import net.stargraph.rank.Rankable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
 
 public abstract class LabeledEntity implements Hashable, Rankable {
     private String id;
     private String value;
+    private final static Logger LOG = LoggerFactory.getLogger(LabeledEntity.class);
 
     public LabeledEntity(String id, String value) {
         if (id == null || id.isEmpty()) {
@@ -40,7 +44,8 @@ public abstract class LabeledEntity implements Hashable, Rankable {
         }
 
         if (value == null || value.isEmpty()) {
-            throw new IllegalArgumentException("`value` is required");
+            LOG.warn("The `value` was null or empty: %s", value);
+            // throw new IllegalArgumentException("`value` is required");
         }
 
         this.id = id;

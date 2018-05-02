@@ -52,7 +52,7 @@ public final class NTriplesModelFactory extends GraphModelFactory {
 
             try (InputStream is = new FileInputStream(ntriplesFile)) {
                 Model model = ModelFactory.createDefaultModel();
-                model.read(is, null, "N-TRIPLES");
+                model.read(is, null, "N-QUADS");
                 return model;
             } catch (Exception e) {
                 throw new StarGraphException(e);
@@ -63,6 +63,6 @@ public final class NTriplesModelFactory extends GraphModelFactory {
     }
 
     private Path getNTriplesPath(String dbId) {
-        return Paths.get(stargraph.getDataRootDir(), dbId, "facts", "triples.nt");
+        return Paths.get(stargraph.getKBCore(dbId).getConfig().getString("triple-store.file"));
     }
 }
